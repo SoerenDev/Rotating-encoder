@@ -19,44 +19,43 @@ GPIO.setup(18, GPIO.IN)
 GPIO.setup(17, GPIO.IN)
 GPIO.setup(27, GPIO.IN)
 
-value_left = 0
-value_right = 0
-value_state = 0
+normal_position_rotating = 0
+state = 0
 position_value = 0
 lastState = 0
 ledState = 0 
 
 while True:
     
-    if GPIO.input(18) and not GPIO.input(17) and value_left:
+    if GPIO.input(18) and not GPIO.input(17) and normal_position_rotating:
         position_value +=1
-        value_left = 0
+        normal_position_rotating = 0
         print(position_value)
 
-    elif not GPIO.input(18) and GPIO.input(17) and value_right:
+    elif not GPIO.input(18) and GPIO.input(17) and normal_position_rotating:
         position_value -= 1
+        normal_position_rotating = 0
         print(position_value)
 
-    value_right = not GPIO.input(18) and not GPIO.input(17)
-    value_left = not GPIO.input(18) and not GPIO.input(17)
+    normal_position_rotating = not GPIO.input(18) and not GPIO.input(17)
 
-    if position_value%30 == 0 and position_value != 0 and value_state: 
+    if position_value%30 == 0 and position_value != 0 and state: 
         client.publish("foobar/oben/lounge/beamer/action", "hdmi1")
         print("hdmi1")
-        value_state = 0
+        state = 0
     
-    elif position_value%20 == 0 and position_value != 0 and value_state:
+    elif position_value%20 == 0 and position_value != 0 and state:
         client.publish("foobar/oben/lounge/beamer/action", "hdmi2")
         print("hdmi2")
-        value_state = 0
+        state = 0
     
-    elif position_value%10 == 0 and position_value != 0 and value_state:
+    elif position_value%10 == 0 and position_value != 0 and state:
         client.publish("foobar/oben/lounge/beamer/action", "vga")
         print("vga")
-        value_state = 0
+        state = 0
     
-    elif not value_state and position_value%10 != 0:
-        value_state = 1
+    elif not state and position_value%10 != 0:
+        state = 1
      
     #Taster
 
